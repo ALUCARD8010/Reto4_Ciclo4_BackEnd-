@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.ResponseEntity.status;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,25 +66,24 @@ public class OrderController {
     //Reto 3:Ordenes de pedido asociadas a los asesores de una zona
     @GetMapping("/zona/{zona}")
     public List<Orders> findByZone(@PathVariable("zona") String zona) {
-        return ordersService.findByZone(zona);
+        return ordersService.getOrderByZone(zona);
     }
     //Métodos del reto 4
 	//Reto 4: Ordenes de un asesor
 	@GetMapping("/salesman/{id}")
 	public List<Orders> ordersSalesManByID(@PathVariable("id") Integer id){
-    	return ordersService.ordersSalesManByID(id);
+    	return ordersService.getBySalesManId(id);
 	}
-    
- 	//Reto 4: Ordenes de un asesor x Estado
-	@GetMapping("/state/{state}/{id}")
-	public List<Orders> ordersSalesManByState(@PathVariable("state") String state, @PathVariable("id") Integer id){
-    	return ordersService.ordersSalesManByState(state, id);
-	}
+
+	@GetMapping("/state/{status}/{id}")
+    public  List<Orders> getBySalesManIdAndStatus(@PathVariable("status")String status, @PathVariable("id") Integer id){
+        return ordersService.getBySalesManIdAndStatus(id, status);
+    }
     
 	//Reto 4: Ordenes de un asesor x fecha
 	@GetMapping("/date/{date}/{id}")
 	public List<Orders> ordersSalesManByDate(@PathVariable("date") String dateStr, @PathVariable("id") Integer id) {
-    	return ordersService.ordersSalesManByDate(dateStr,id);
+    	return ordersService.getRegisterDayAndSalesManId(dateStr,id);
 	}
 
 }

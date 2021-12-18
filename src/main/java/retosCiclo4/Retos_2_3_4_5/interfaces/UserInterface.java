@@ -5,6 +5,7 @@
  */
 package retosCiclo4.Retos_2_3_4_5.interfaces;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import retosCiclo4.Retos_2_3_4_5.model.User;
@@ -16,6 +17,6 @@ import retosCiclo4.Retos_2_3_4_5.model.User;
 public interface UserInterface extends MongoRepository<User, Integer>{
     Optional<User> findByEmail(String email);
     Optional<User> findByEmailAndPassword(String email,String password);
-    //Para seleccionar el usuario con el id maximo
     Optional<User> findTopByOrderByIdDesc();
+    List<User> findByMonthBirthtDay(String monthBirthtDay);
 }

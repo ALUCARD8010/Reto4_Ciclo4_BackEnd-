@@ -61,5 +61,15 @@ public class CleaningProductController {
     public boolean delete(@PathVariable("id") Integer id) {
         return accessoryService.delete(id);
     }
+    
+    @GetMapping("/price/{price}")
+    public List<CleaningProduct> findByPriceLessThanEqual(@PathVariable("price") double price) {
+        return accessoryService.findByPriceLessThanEqual(price);
+    }
+
+    @GetMapping("/description/{description}")
+    public List<CleaningProduct> findByDescriptionLike(@PathVariable("description") String description) {
+        return accessoryService.findByDescriptionLike(description);
+    }
 
 }

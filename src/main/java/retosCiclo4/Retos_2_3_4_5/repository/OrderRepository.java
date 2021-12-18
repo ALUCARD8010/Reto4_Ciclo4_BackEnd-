@@ -5,6 +5,8 @@
  */
 package retosCiclo4.Retos_2_3_4_5.repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -27,79 +29,45 @@ public class OrderRepository {
     
     @Autowired
     private OrderInterface orderCrudRepository;
-    
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
-    public List<Orders> getAll() {
-        return (List<Orders>) orderCrudRepository.findAll();
+    public List<Orders> getAll(){
+        return orderCrudRepository.findAll();
     }
 
-    public Optional<Orders> getOrder(int id) {
+    public Optional<Orders> getOrder(Integer id){
         return orderCrudRepository.findById(id);
     }
 
-    public Orders create(Orders order) {
+    public Orders create(Orders order){
         return orderCrudRepository.save(order);
     }
 
-    public void update(Orders order) {
+    public void update(Orders order){
         orderCrudRepository.save(order);
     }
 
-    public void delete(Orders order) {
+    public void delete(Orders order){
         orderCrudRepository.delete(order);
     }
 
-    public Optional<Orders> lastUserId() {
-        return orderCrudRepository.findTopByOrderByIdDesc();
+    public List<Orders> getOrderByZone(String zone){
+        return orderCrudRepository.findBySalesManZone(zone);
     }
 
-    public List<Orders> findByZone(String zona) {
-        return orderCrudRepository.findByZone(zona);
+    public List<Orders> getBySalesManId(Integer id){
+        return orderCrudRepository.findBySalesManId(id);
     }
-    
-    //Métodos del reto 4
-    //Reto 4: Ordenes de un asesor
-    public List<Orders> ordersSalesManByID(Integer id) {
-        Query query = new Query();
-        
-        Criteria criterio = Criteria.where("salesMan.id").is(id);
-        query.addCriteria(criterio);
-        
-        List<Orders> orders = mongoTemplate.find(query, Orders.class);
-        
-        return orders;
-        
+
+    public List<Orders> getBySalesManIdAndStatus(Integer id, String status){
+        return orderCrudRepository.findBySalesManIdAndStatus(id, status);
     }
-    
-    //Reto 4: Ordenes de un asesor x Estado
-    public List<Orders> ordersSalesManByState(String state, Integer id) {
-        Query query = new Query();
-        Criteria criterio = Criteria.where("salesMan.id").is(id)
-                            .and("status").is(state);
-        
-        query.addCriteria(criterio);
-        
-        List<Orders> orders = mongoTemplate.find(query,Orders.class);
-        
-        return orders;
-    }
-    
-    //Reto 4: Ordenes de un asesor x Fecha
-    public List<Orders> ordersSalesManByDate(String dateStr, Integer id) {
-	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        Query query = new Query();
-        
-        Criteria dateCriteria = Criteria.where("registerDay")
-			.gte(LocalDate.parse(dateStr, dtf).minusDays(1).atStartOfDay())
-			.lt(LocalDate.parse(dateStr, dtf).plusDays(1).atStartOfDay())
-			.and("salesMan.id").is(id);
-        
-        query.addCriteria(dateCriteria);
-        
-        List<Orders> orders = mongoTemplate.find(query,Orders.class);
-        
-        return orders;       
+
+    public List<Orders> getByRegisterDayAndSalesManId(String registerDay, Integer id){
+        try {
+            return orderCrudRepository.findByRegisterDayAndSalesManId(new SimpleDateFormat("yyyy-MM-dd").parse(registerDay), id);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

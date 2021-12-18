@@ -80,10 +80,17 @@ public class CleaningProductService {
     }
 
     public boolean delete(Integer id) {
-        Boolean aBoolean = getCleaningProduct(id).map(accesory -> {
+     return getCleaningProduct(id).map(accesory -> {
             cleaningProduct.delete(accesory);
             return true;
         }).orElse(false);
-        return aBoolean;
+        
+    }
+    public List<CleaningProduct> findByPriceLessThanEqual(Double price){
+        return cleaningProduct.findByPriceLessThanEqual(price);
+    }
+    
+    public List<CleaningProduct> findByDescriptionLike (String description){
+        return cleaningProduct.findByDescriptionLike(description);
     }
 }
